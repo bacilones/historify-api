@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --harmony --no-deprecation app.js"
+    "start": "node --harmony --no-deprecation app.js",
+    "develop" : "nodemon --harmony --no-deprecation app.js"
   },
   "repository": {
     "type": "git",

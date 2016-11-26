@@ -12,9 +12,37 @@ async function startup () {
     let models = schema.models;
     let db = schema.db;
 
-    app.get('/users', async (req, res) => {
-        let users = await models.User.findAll();
-        res.send(users);
+
+
+
+    app.get('/user/:id', async (req, res) => {
+        let user = await models.User.findById(req.params.id);
+        res.send(user);
+    });
+
+    app.get('/mediatype', async (req, res) => {
+        let types  = await models.MediaType.findAll();
+        res.send(types);
+    });
+
+    app.get('/tag', async (req, res) => {
+        let tags = await models.Tag.findAll();
+        res.send(tags);
+    });
+
+    app.get('/category', async (req, res) => {
+        let categories = await models.Category.findAll();
+        res.send(categories);
+    });
+
+    app.get('/historicalevent', async (req, res) => {
+        let events = await models.HistoricalEvent.findAll();
+        res.send(events);
+    });
+
+    app.get('/historicalevent/:id', async (req, res) => {
+        let event = await models.HistoricalEvent.findById(req.params.id, {include : models.PointOfView});
+        res.send(event);
     });
 
     app.listen(3000, () => {
