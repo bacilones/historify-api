@@ -1,0 +1,23 @@
+{
+  "name": "historify-api",
+  "version": "1.0.0",
+  "description": "Api del proyecto historify, que tiene por objetivo guardar los puntos de vista de las personas para los distintos eventos historicos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node --harmony app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bacilones/historify-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bacilones/historify-api/issues"
+  },
+  "homepage": "https://github.com/bacilones/historify-api#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
