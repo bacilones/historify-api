@@ -3,18 +3,21 @@ const app              = express();
 const SequelizeModels  = require('sequelize-models');
 const dbConfig         = require('./config/database-dev.js');
 const router           = express.Router();
+const azureUpload           = require('./lib/azure-upload');
 
 const bodyParser       = require('body-parser');
 const logger           = require('morgan');
 const cors             = require('cors');
+const multer           = require('multer');
+const uploader         = multer({ dest: 'uploads/'});
 
 var seqModels  = new SequelizeModels(dbConfig);
 
 app.use(logger('dev'));
 app.use(cors());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 async function startup () {
 
@@ -63,7 +66,6 @@ async function startup () {
     });
 
 
-
     app.post('/historicalevent/:id/pov', async (req, res) => {
         // @TODO - add authentication
         // @TODO - user token.id must be = to user_id
@@ -77,6 +79,46 @@ async function startup () {
         console.log('pov final -->', pov);
         let createdPov = await models.PointOfView.create(pov);
         res.send(createdPov);
+    });
+
+
+    app.post('/pointofview/:id/media', uploader.single('media'), async(req, res) => {
+        let uploaded = await azureUpload({
+            fileName  : req.body.fileName,
+            container : 'images',
+            file      : req.file.path,
+            size      : req.file.size
+        });
+
+        let media = await models.Media.create({
+            point_of_view_id : req.body.pointOfViewId,
+            media_url : `https://historify.blob.core.windows.net/images/${req.body.fileName}`,
+            media_type_id : 1
+        });
+
+        res.send(media);
+    });
+
+
+    app.post('/historicalevent/:id/media', uploader.single('media'), async (req, res) => {
+        console.log('file --> ', req.file);
+        console.log('body --> ', req.body);
+
+        let uploaded = await azureUpload({
+            fileName  : req.body.fileName,
+            container : 'images',
+            file      : req.file.path,
+            size      : req.file.size
+        });
+
+        let media = await models.Media.create({
+            historical_event_id : req.body.historicalEventId,
+            media_url : `https://historify.blob.core.windows.net/images/${req.body.fileName}`,
+            media_type_id : 1
+        });
+
+
+        res.send(media);
     });
 
     app.listen(3000, () => {
