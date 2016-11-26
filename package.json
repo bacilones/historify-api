@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --harmony --no-deprecation app.js",
-    "develop" : "nodemon --harmony --no-deprecation app.js"
+    "develop": "nodemon --harmony --no-deprecation app.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/bacilones/historify-api#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "chalk": "^1.1.3",
     "express": "^4.14.0",
+    "morgan": "^1.7.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "sequelize-models": "^1.3.1"

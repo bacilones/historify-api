@@ -4,15 +4,21 @@ const SequelizeModels  = require('sequelize-models');
 const dbConfig         = require('./config/database-dev.js');
 const router           = express.Router();
 
+const bodyParser       = require('body-parser');
+const logger           = require('morgan');
+
 var seqModels  = new SequelizeModels(dbConfig);
+
+app.use(logger('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 
 async function startup () {
 
     let schema = await seqModels.getSchema();
     let models = schema.models;
     let db = schema.db;
-
-
 
 
     app.get('/user/:id', async (req, res) => {
@@ -43,6 +49,32 @@ async function startup () {
     app.get('/historicalevent/:id', async (req, res) => {
         let event = await models.HistoricalEvent.findById(req.params.id, {include : models.PointOfView});
         res.send(event);
+    });
+
+
+    app.post('/historicalevent', async (req, res) => {
+        // @TODO - add authentication
+        // @TODO - user token.id must be = to user_id
+        console.log(req.body);
+        let event = await models.HistoricalEvent.create(req.body);
+        res.send(event);
+    });
+
+
+
+    app.post('/historicalevent/:id/pov', async (req, res) => {
+        // @TODO - add authentication
+        // @TODO - user token.id must be = to user_id
+        console.log('he id -->', req.params.id);
+        console.log('pov data -->', req.body);
+
+        let eventId = req.params.id;
+        let pov = req.body;
+        pov.historical_event_id = eventId;
+
+        console.log('pov final -->', pov);
+        let createdPov = await models.PointOfView.create(pov);
+        res.send(createdPov);
     });
 
     app.listen(3000, () => {
